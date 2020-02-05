@@ -1,0 +1,40 @@
+%{
+int years = 0;
+char substring[2];
+%}
+
+NUMBER ([1-9][0-9]{0,5})
+COUNTYONE C|CE|CN|CW|D|DL|G|KE|KK|L|LD|LH|LM|LS|MH|MN|MO|OY|RN|SO|T|W|WH|WX|WW
+COUNTYTWO C|CE|CN|CW|D|DL|G|KE|KK|LK|LD|LH|LM|LS|MH|MN|MO|OY|RN|SO|TN|TS|W|WH|WD|WW
+YEARONE 1{1}[3-9]{1}(1|2){1}
+YEARTWO [0-9]+
+
+%%
+. {}
+\n {}
+
+{YEARONE}-{COUNTYONE}-{NUMBER} {substring[0]=yytext[0];
+                                substring[1]=yytext[1];
+                                years=atoi(substring);
+                                years= 19-years;printf("%d\n",years);}
+{YEARTWO}-{COUNTYTWO}-{NUMBER} {substring[0]=yytext[0];
+                                substring[1]=yytext[1];
+                                years=atoi(substring);
+                                if(years <20){
+                                years= 19-years;
+                                }else{
+                                  years= 119-years;
+                                }
+                                printf("%d\n",years);}
+
+([0-9]*"-"*[a-zA-Z]*"-"*[0-9]*)* {printf("%s\n","INVALID");}
+
+
+
+
+%%
+
+int main(){
+yylex();
+return 0;
+}
